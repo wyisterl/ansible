@@ -1,0 +1,72 @@
+---
+# 更改hostname，hostname过于复杂可能会导致配置失败
+- name: change hostname
+  shell: hostnamectl set-hostname oracle
+  args:
+    warn: no
+
+# 拷贝配置文件
+- name: copy configuration file
+  template: 
+    src: oracle-19c.j2 
+    dest: /etc/init.d/oracledb_{{ oracle_sid }}-{{ oracle_database_version }}
+  when: oracle_database_version == "19c"
+
+# 拷贝配置文件
+- name: copy conf file
+  template: 
+    src: oracle-19c.conf.j2
+    dest: /etc/init.d/oracledb_{{ oracle_sid }}-{{ oracle_database_version }}.conf
+  when: oracle_database_version == "19c"
+
+# 配置数据库
+- name: configure database
+  shell: /etc/init.d/oracledb_{{ oracle_sid }}-{{ oracle_database_version}} configure
+  when: oracle_database_version == "19c"
+  register: configuration_result
+
+# 设置oracle的环境变量
+- name: set oracle environmental variables
+  blockinfile:
+    path: /home/oracle/.bash_profile
+    insertafter: '^export PATH'
+    block: | 
+      export ORACLE_HOME={{ oracle_home }}
+      export PATH=$PATH:{{ oracle_home }}/bin
+      export ORACLE_SID={{ oracle_sid }}
+
+# 设置dbstart能通过dbstart来启动oracle服务
+- name: modify dbstart
+  lineinfile:
+    path: '{{ oracle_home }}/bin/dbstart'
+    regexp: '^ORACLE_HOME_LISTNER='
+    line: ORACLE_HOME_LISTNER=$ORACLE_HOME
+    owner: oracle
+    group: oinstall
+
+# 设置dbshut能通过dbshut来关闭oracle服务
+- name: modify dbshut
+  lineinfile:
+    path: '{{ oracle_home }}/bin/dbshut'
+    regexp: '^ORACLE_HOME_LISTNER='
+    line: ORACLE_HOME_LISTNER=$ORACLE_HOME
+    owner: oracle
+    group: oinstall
+
+# 设置开机启动oracle服务
+- name: modify /etc/oratab
+  lineinfile:
+    path: /etc/oratab
+    regexp: '^ORCLCDB:{{ oracle_home }}:N'
+    line: ORCLCDB:{{ oracle_home }}:Y
+    owner: oracle
+    group: oinstall
+
+# 设置开机启动oracle服务
+- name: set oracle as boot service
+  blockinfile:
+    path: /etc/rc.d/rc.local
+    block: | 
+      su oracle -lc  'lsnrctl start'
+      su oracle -lc  'dbstart'
+    mode: '0755'

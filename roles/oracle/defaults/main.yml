@@ -1,0 +1,52 @@
+---
+#define your oracle installation packages directory
+#自定义oracle.zip的目录
+oracle_installer_directory: /home
+
+#define your oracle database version
+#自定义oracle的版本，目前仅支持19c
+oracle_database_version: 19c
+
+#define your oracle home
+#自定义oracle的安装目录
+oracle_home: /opt/oracle/product/19c/dbhome_1
+
+#define your oracle sid
+#自定义oracle的sid
+oracle_sid: ORCLCDB
+
+#define your template in General_Purpose.dbc and Data_Warehouse.dbc
+#自定义模板，标准模板/数仓模板
+template_name: General_Purpose.dbc
+
+#define your oracle charset, for example, ZHS16GBK、AL32UTF8
+#自定义oracle的字符集，如ZHS16GBK、AL32UTF8
+charset: AL32UTF8
+
+#define your pdb name
+#自定义oracle的pdb名字
+pdb_name: ORCLPDB1
+
+#define your number of pdbs
+#自定义pdb的数量
+number_of_pdbs: 1
+
+#define your cdb creating mode
+#自定义cdb创建模式
+create_as_cdb: true
+
+#define your oracle owner
+#自定义oracle的用户
+oracle_owner: oracle
+
+#define your oracle database listener
+#自定义oracle监听
+listener_port: 1521
+
+#define your oracle database oradata location
+#自定义oradata的目录
+oracle_data_location: /opt/oracle/oradata
+
+#define your oracle em express listener
+#自定义oracle em的监听
+em_express_port: 5500

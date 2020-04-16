@@ -1,0 +1,56 @@
+---
+# 关闭selinux
+- name: disable selinux
+  selinux: 
+    state: disabled
+  ignore_errors: yes
+
+# 关闭防火墙
+- name: disable firewall deamon (firewalld)
+  service: 
+    name: firewalld
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+
+# 检查oraInst.loc
+- name: check oraInst.loc
+  stat: 
+    path: /etc/oraInst.loc
+  register: oraInst_result
+
+# 如果存在oraInst.loc则删除
+- name: remove oraInst.loc
+  shell: rm -rf /etc/oraInst.loc
+  args:
+    warn: no
+  when: oraInst_result.stat.exists == "true"
+
+# 解压oracle19c的安装包，这里笔者已经将安装文件压缩到oracle19c.zip，如果读者没有压缩则可以注释掉这部分，直接执行下面部分
+- name: prepare oracle install packages
+  unarchive:
+    src: "{{ oracle_installer_directory }}/oracle19c.zip"
+    dest: /tmp
+    owner: root
+    group: root
+  when: oracle_database_version == "19c"
+
+# 安装oracle所需的依赖，注意名称及路径是否对应/tmp/oracle-database-preinstall-19c-1.0-1.el7.x86_64.rpm
+- name: install required libraries
+  yum: 
+    name: /tmp/oracle-database-preinstall-19c-1.0-1.el7.x86_64.rpm
+    state: present
+  become: true
+  become_user: root
+  when: oracle_database_version == "19c"
+  register: rpm_result
+
+# 安装oracle，注意名称及路径是否对应/tmp/oracle-database-ee-19c-1.0-1.x86_64.rpm
+- name: install oracle 19c
+  yum: 
+    name: /tmp/oracle-database-ee-19c-1.0-1.x86_64.rpm
+    state: present
+  become: true
+  become_user: root
+  when: oracle_database_version == "19c"
+  register: installation_result

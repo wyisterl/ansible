@@ -1,0 +1,6 @@
+---
+# tasks file for oracle-database
+
+- include: install.yml
+
+- include: configuration.yml
