@@ -7,8 +7,10 @@ Thanks a lot!
 XD
 
 # Contents
+```
 roles
     └── oracle
+```
 
 # Usage
 Please satisfy the following conditions or you can configure on your own, accroding to the exclusive `README.md` in the every different playbook before you enter the command below:
@@ -27,8 +29,10 @@ ansible-playbook -i host.host roles_list.yml
 该库旨在使用Ansible的playbook脚本来安装各种各样常用的软件，我会不定期上传我编写及使用过的playbook，大家可以通过下面的目录知晓目前已有的playbook，如果发现任何bug，麻烦请给我提交issues，我会尽可能快的解决，如果觉得有帮助的话，请不要吝惜你宝贵的【★Star】，谢谢！
 
 # 目录
+```
 roles
     └── oracle
+```
 
 # 使用方法
 在输入下列命令之前，需要确保满足下列条件，每个playbook都有对应详细的`README.md`,读者也可根据playbook中的`README.md`来进行修改
