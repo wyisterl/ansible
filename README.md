@@ -39,7 +39,7 @@ roles
 - [x] 确保你的Linux机器已安装了Ansible。
 - [x] 将`host.host`配置文件的内容修改为你想要安装的服务器信息。
 - [x] 将`roles_list.yml`配置文件的内容修改为你想要安装的软件。
-- [x] 修改`defaults`中的变量值，支持自定义路径等配置。
+- [x] 修改`defaults`目录下的yml文件中的变量值，支持自定义路径等配置。
 
 ```
 ansible-playbook -i host.host roles_list.yml
